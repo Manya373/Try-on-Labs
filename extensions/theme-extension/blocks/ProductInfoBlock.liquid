@@ -1,0 +1,104 @@
+{% schema %}
+{
+  "name": "Product Information Block",
+  "target": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "product_title",
+      "label": "Product Title",
+      "default": "Stylish Hoodie"
+    },
+    {  
+      "type": "image_picker",
+      "id": "product_image",
+      "label": "Product Image"
+    },
+    {
+      "type": "text",
+      "id": "product_price",
+      "label": "Product Price",
+      "default": "2000"  // Setting the default price to 2000
+    },
+    {
+      "type": "textarea",
+      "id": "product_description",
+      "label": "Product Description",
+      "default": "This stylish hoodie is perfect for all seasons, made from high-quality material for maximum comfort."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_variants",
+      "label": "Show Variants",
+      "default": true
+    }
+  ]
+}
+{% endschema %}
+
+<div class="product-info">
+  <!-- Product Title -->
+  <h1 class="product-title">{{ settings.product_title }}</h1>
+  
+  <!-- Product Featured Image -->
+  {% if settings.product_image %}
+    <div class="product-image">
+      <img src="{{ settings.product_image | img_url: 'medium' }}" alt="{{ settings.product_title }}">
+    </div>
+  {% else %}
+    <p>No image available</p>
+  {% endif %}
+  
+  <!-- Product Description -->
+  <div class="product-description">
+    {{ settings.product_description | strip_html | truncatewords: 50 }}
+  </div>
+
+  <!-- Product Price -->
+  <div class="product-price">
+    <strong>Price:</strong> {{ settings.product_price }}
+  </div>
+
+  <!-- Product Size -->
+  <div class="product-size">
+    <strong>Size:</strong>
+    <div class="size-options">
+      {% assign sizes = "S,M,L,XL,XXL" | split: "," %}
+      {% for size in sizes %}
+        <button type="button" class="size-button">{{ size }}</button>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Quantity Selector -->
+  <div class="quantity-selector">
+    <strong>Quantity:</strong>
+    <div class="quantity-controls">
+      <button type="button" class="quantity-decrement">-</button>
+      <input type="text" name="quantity" class="quantity-input" value="1">
+      <button type="button" class="quantity-increment">+</button>
+    </div>
+  </div>
+
+  <!-- Product Variants -->
+  {% if settings.show_variants and product.variants.size > 1 %}
+    <div class="product-variants">
+      <strong>Available Variants:</strong>
+      <ul>
+        {% for variant in product.variants %}
+          <li>
+            <span>{{ variant.title }}</span> - 
+            <span>{{ variant.price | money }}</span>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+  
+  <!-- Add to Cart Button -->
+  <form method="post" action="/cart/add">
+    <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+    <input type="hidden" name="quantity" value="1" class="quantity-hidden">
+    <button type="submit" class="add-to-cart-button">Add to Cart</button>
+  </form>
+</div>

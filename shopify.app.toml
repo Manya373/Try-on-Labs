@@ -1,0 +1,33 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+client_id = "766fe9daad0a0bfffd0a96530a79a9b5"
+name = "myapp"
+handle = "myapp-1009"
+application_url = "https://entertainment-modified-phrase-shanghai.trycloudflare.com"
+embedded = true
+
+[build]
+automatically_update_urls_on_dev = true
+dev_store_url = "quickstart-94fe576d.myshopify.com"
+include_config_on_deploy = true
+
+[access_scopes]
+# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
+scopes = "write_products"
+
+[auth]
+redirect_urls = [
+  "https://entertainment-modified-phrase-shanghai.trycloudflare.com/auth/callback",
+  "https://entertainment-modified-phrase-shanghai.trycloudflare.com/auth/shopify/callback",
+  "https://entertainment-modified-phrase-shanghai.trycloudflare.com/api/auth/callback"
+]
+
+[webhooks]
+api_version = "2024-07"
+
+  [[webhooks.subscriptions]]
+  topics = [ "app/uninstalled" ]
+  uri = "/webhooks"
+
+[pos]
+embedded = false
